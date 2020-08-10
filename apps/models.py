@@ -54,6 +54,7 @@ class Mahasiswa(models.Model):
 
 class Soal(models.Model):
     kd_soal = models.CharField(max_length=10, primary_key=True)
+    judul_soal = models.CharField(max_length=255)
     kd_ampu = models.ForeignKey(AmpuMatkul, on_delete=models.PROTECT)
     created_at = models.CharField(max_length=20)
     updated_at = models.CharField(max_length=20)
@@ -62,8 +63,10 @@ class DetailSoal(models.Model):
     id = models.AutoField(primary_key=True)
     kd_soal = models.ForeignKey(Soal, on_delete=models.PROTECT)
     soal = models.TextField()
-    jawaban = models.TextField()
-    bobot = models.PositiveIntegerField(validators=[MaxValueValidator(3)])
+    jawaban1 = models.TextField()
+    jawaban2 = models.TextField()
+    jawaban3 = models.TextField()
+    #bobot = models.PositiveIntegerField(validators=[MaxValueValidator(3)])
     created_at = models.CharField(max_length=20)
     updated_at = models.CharField(max_length=20)
 

@@ -25,7 +25,7 @@ def dashboard(request):
     if 'username' not in request.session:
         return HttpResponseRedirect(reverse('login'))
     else:
-        username = request.session.get('username')
+        username = request.session.get('username')  
         
         data = {
             'admin': Admin.objects.get(pk=username),

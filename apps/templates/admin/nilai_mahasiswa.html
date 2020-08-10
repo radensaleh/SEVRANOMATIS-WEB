@@ -140,11 +140,14 @@
                                     <th>No</th>
                                     <th>Kode Nilai</th>
                                     <th>Kode Soal</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Dosen Pengampu</th>
                                     <th>Nama Mahasiswa</th>
+                                    <th>Kelas</th>
                                     <th>Nilai</th>
                                     <th>Index</th>
                                     <th>Dibuat</th>
-                                    <th>Diperbaharui</th>
+                                    <!-- <th>Diperbaharui</th> -->
                                 </tr>
                             </thead>
                             <tfoot>
@@ -152,11 +155,14 @@
                                     <th>No</th>
                                     <th>Kode Nilai</th>
                                     <th>Kode Soal</th>
+                                    <th>Mata Kuliah</th>
+                                    <th>Dosen Pengampu</th>
                                     <th>Nama Mahasiswa</th>
+                                    <th>Kelas</th>
                                     <th>Nilai</th>
                                     <th>Index</th>
                                     <th>Dibuat</th>
-                                    <th>Diperbaharui</th>
+                                    <!-- <th>Diperbaharui</th> -->
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -164,12 +170,15 @@
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ nilai.kd_nilai }}</td>
-                                    <td>{{ nilai.kd_soal }}</td>
+                                    <td>{{ nilai.kd_soal_id }}</td>
+                                    <td>{{ nilai.kd_soal.kd_ampu.kd_mk.mata_kuliah}}</td>
+                                    <td>{{ nilai.kd_soal.kd_ampu.nip.nama }}</td>
                                     <td>{{ nilai.nim.nama }}</td>
+                                    <td>{{ nilai.nim.kd_kelas.kelas }}</td>
                                     <td>{{ nilai.nilai }}</td>
                                     <td>{{ nilai.index }}</td>
                                     <td>{{ nilai.created_at }}</td>
-                                    <td>{{ nilai.updated_at }}</td>
+                                    <!-- <td>{{ nilai.updated_at }}</td> -->
                                 </tr>
                                 {% endfor %}
                             </tbody>
