@@ -24,7 +24,7 @@ data-science==0.1
 defer==1.0.6
 distlib==0.3.0
 distro-info===0.18ubuntu0.18.04.1
-Django==3.0
+Django==3.1.12
 django-crispy-forms==1.9.0
 filelock==3.0.12
 Flask==1.1.1
