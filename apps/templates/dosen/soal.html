@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Soal</title>
+    <title>Data Ujian</title>
     <!-- GLOBAL MAINLY STYLES-->
     <link href="{% static 'assets/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" />
     <link href="{% static 'assets/vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" />
@@ -85,7 +85,7 @@
                     </li>
                     <li class="active">
                         <a href="{% url 'soal-dosen' %}"><i class="sidebar-item-icon fa fa-book"></i>
-                            <span class="nav-label">Soal-Soal</span>
+                            <span class="nav-label">Ujian</span>
                         </a>
                     </li>
                     <li>
@@ -100,7 +100,7 @@
         <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
-                <h1 class="page-title">Data Soal</h1>
+                <h1 class="page-title">Data Ujian</h1>
                 <!-- <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -121,8 +121,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Soal</th>
-                                    <th>Judul Soal</th>
+                                    <th>Kode Ujian</th>
+                                    <th>Judul Ujian</th>
                                     <th>Mata Kuliah</th>
                                     <th>Kelas</th>
                                     <th>Semester</th>
@@ -134,8 +134,8 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Soal</th>
-                                    <th>Judul Soal</th>
+                                    <th>Kode Ujian</th>
+                                    <th>Judul Ujian</th>
                                     <th>Mata Kuliah</th>
                                     <th>Kelas</th>
                                     <th>Semester</th>
@@ -157,7 +157,7 @@
                                     <!-- <td>{{ soal.updated_at }}</td> -->
                                     <td>
                                         <a href="{% url 'detail-soal-dosen' soal.kd_soal %}" class="btn btn-sm btn-info">
-                                            <i class="fa fa-info-circle"></i> Detail Soal</a>
+                                            <i class="fa fa-info-circle"></i> Data Soal</a>
                                         <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#hapus" data-kd="{{ soal.kd_soal }}">
                                             <i class="fa fa-trash"></i> Hapus</button>
                                     </td>
@@ -191,7 +191,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="judul_soal" class="col-form-label">Judul Soal :</label>
+                                        <label for="judul_soal" class="col-form-label">Judul Ujian :</label>
                                         <input type="text" class="form-control" name="judul_soal" required>
                                     </div>
                             </div>
@@ -385,7 +385,7 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
+                                            "{% url 'soal-dosen' %}";
                                     }
                                 });
                             } else {
@@ -397,7 +397,7 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
+                                            "{% url 'soal-dosen' %}";
                                     }
                                 });
                             }

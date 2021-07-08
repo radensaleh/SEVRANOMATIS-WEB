@@ -23,7 +23,7 @@
         <!-- START HEADER-->
         <header class="header">
             <div class="page-brand">
-                <a class="link" href="{% url 'dashboard' %}">
+                <a class="link" href="{% url 'dashboard-dosen' %}">
                     <span class="brand">Sevranomatis v1.0
                         <span class="brand-tip"></span>
                     </span>
@@ -49,7 +49,8 @@
                             <button class="dropdown-item" data-toggle="modal" data-target="#pengaturan" data-nip="{{ dosen.nip }}" data-nama="{{ dosen.nama }}"><i
                                     class="fa fa-cog"></i>Settings</button>
                             <!-- <li class="dropdown-divider"></li> -->
-                            <a class="dropdown-item" href="{% url 'logout-dosen' %}"><i class="fa fa-power-off"></i>Logout</a>
+                            <a class="dropdown-item" href="{% url 'logout-dosen' %}"><i
+                                    class="fa fa-power-off"></i>Logout</a>
                         </ul>
                     </li>
                 </ul>
@@ -71,7 +72,8 @@
                 </div>
                 <ul class="side-menu metismenu">
                     <li>
-                        <a class="active" href="{% url 'dashboard-dosen' %}"><i class="sidebar-item-icon fa fa-th-large"></i>
+                        <a class="active" href="{% url 'dashboard-dosen' %}"><i
+                                class="sidebar-item-icon fa fa-th-large"></i>
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
@@ -83,7 +85,7 @@
                     </li>
                     <li>
                         <a href="{% url 'soal-dosen' %}"><i class="sidebar-item-icon fa fa-book"></i>
-                            <span class="nav-label">Soal-Soal</span>
+                            <span class="nav-label">Ujian</span>
                         </a>
                     </li>
                     <li class="active">
@@ -98,7 +100,7 @@
         <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
-                <h1 class="page-title">Data Nilai Mahasiswa</h1>
+                <h1 class="page-title">Data Ujian</h1>
                 <!-- <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -110,7 +112,8 @@
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">Table</div>
-                        <!-- <button class="btn btn-rounded btn-success"><i class="fa fa-plus"></i>&nbsp; Tambah
+                        <!-- <button class="btn btn-rounded btn-success" data-toggle="modal" data-target="#tambah"><i
+                                class="fa fa-plus-circle"></i>&nbsp; Tambah
                             Data</button> -->
                     </div>
                     <div class="ibox-body">
@@ -118,47 +121,44 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Nilai</th>
-                                    <th>Kode Soal</th>
+                                    <th>Kode Ujian</th>
+                                    <th>Judul Ujian</th>
                                     <th>Mata Kuliah</th>
-                                    <th>Semester</th>
-                                    <th>Nama Mahasiswa</th>
                                     <th>Kelas</th>
-                                    <th>Nilai</th>
-                                    <th>Index</th>
+                                    <th>Semester</th>
                                     <th>Dibuat</th>
                                     <!-- <th>Diperbaharui</th> -->
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Nilai</th>
-                                    <th>Kode Soal</th>
+                                    <th>Kode Ujian</th>
+                                    <th>Judul Ujian</th>
                                     <th>Mata Kuliah</th>
-                                    <th>Semester</th>
-                                    <th>Nama Mahasiswa</th>
                                     <th>Kelas</th>
-                                    <th>Nilai</th>
-                                    <th>Index</th>
+                                    <th>Semester</th>
                                     <th>Dibuat</th>
                                     <!-- <th>Diperbaharui</th> -->
+                                    <th>Action</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-                                {% for nilai in data_nilai %}
+                                {% for soal in data_soal %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{ nilai.kd_nilai }}</td>
-                                    <td>{{ nilai.kd_soal_id }}</td>
-                                    <td>{{ nilai.kd_soal.kd_ampu.kd_mk.mata_kuliah}}</td>
-                                    <td>{{ nilai.kd_soal.kd_ampu.semester }}</td>
-                                    <td>{{ nilai.nim.nama }}</td>
-                                    <td>{{ nilai.nim.kd_kelas.kelas }}</td>
-                                    <td>{{ nilai.nilai }}</td>
-                                    <td>{{ nilai.index }}</td>
-                                    <td>{{ nilai.created_at }}</td>
-                                    <!-- <td>{{ nilai.updated_at }}</td> -->
+                                    <td>{{ soal.kd_soal }}</td>
+                                    <td>{{ soal.judul_soal }}</td>
+                                    <td>{{ soal.kd_ampu.kd_mk.mata_kuliah }}</td>
+                                    <td>{{ soal.kd_ampu.kd_kelas.kelas }}</td>
+                                    <td>{{ soal.kd_ampu.semester }}</td>
+                                    <td>{{ soal.created_at }}</td>
+                                    <!-- <td>{{ soal.updated_at }}</td> -->
+                                    <td>
+                                        <a href="{% url 'detail-nilai-mahasiswa' soal.kd_soal %}" class="btn btn-sm btn-info">
+                                            <i class="fa fa-trophy"></i> Nilai Mahasiswa</a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -272,6 +272,7 @@
         <script src="{% static 'assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript">
         </script>
         <!-- PAGE LEVEL PLUGINS-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <!-- <script src="{% static 'assets/vendors/chart.js/dist/Chart.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-2.0.3.min.js' %}" type="text/javascript">
         </script>
@@ -282,18 +283,11 @@
         <!-- CORE SCRIPTS-->
         <script src="{% static 'assets/js/app.min.js' %}" type="text/javascript"></script>
         <!-- PAGE LEVEL SCRIPTS-->
+        <!-- <script src="{% static 'assets/js/scripts/dashboard_1_demo.js' %}" type="text/javascript"></script> -->
         <script type="text/javascript">
             $(function() {
                 $('#example-table').DataTable({
                     pageLength: 10,
-                    //"ajax": './assets/demo/data/table_data.json',
-                    /*"columns": [
-                        { "data": "name" },
-                        { "data": "office" },
-                        { "data": "extn" },
-                        { "data": "start_date" },
-                        { "data": "salary" }
-                    ]*/
                 });
 
                 $('#pengaturan').on('show.bs.modal', function(event) {
@@ -327,7 +321,7 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'data-nilai' %}";
+                                            "{% url 'nilai-mahasiswa' %}";
                                     }
                                 });
                             } else {
@@ -339,13 +333,14 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'data-nilai' %}";
+                                            "{% url 'nilai-mahasiswa' %}";
                                     }
                                 });
                             }
                         }
                     })
                 })
+
 
             })
         </script>

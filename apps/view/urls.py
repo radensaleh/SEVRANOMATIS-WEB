@@ -58,6 +58,8 @@ urlpatterns = [
     path('dosen/data-soal/<str:kd_soal>/hapus', dosen_view.hapus_detailsoal_dosen, name='hapus-detailsoal-dosen'),
     
     path('dosen/data-nilai', dosen_view.nilai_mahasiswa, name='nilai-mahasiswa'),
+    path('dosen/data-detail-nilai/<str:kd_soal>', dosen_view.detail_nilai_mahasiswa, name='detail-nilai-mahasiswa'),
+    path('dosen/data-detail-nilai/<str:kd_soal>/<str:kd_nilai>', dosen_view.log_mahasiswa, name='log-mahasiswa'),
 
     path('dosen/logout', dosen_view.logout_dosen, name='logout-dosen'),
 

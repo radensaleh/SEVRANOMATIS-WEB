@@ -85,7 +85,7 @@
                     </li>
                     <li class="active">
                         <a href="{% url 'soal-dosen' %}"><i class="sidebar-item-icon fa fa-book"></i>
-                            <span class="nav-label">Soal-Soal</span>
+                            <span class="nav-label">Ujian</span>
                         </a>
                     </li>
                     <li>
@@ -101,410 +101,453 @@
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
                 <h1 class="page-title">
-                    <a href="{% url 'soal-dosen' %}"><i class="fa fa-arrow-circle-o-left"></i></a> Detail Soal [{{ kd_soal }}]</h1>
-                <!-- <ol class="breadcrumb">
+                    <a href="{% url 'soal-dosen' %}"><i class="fa fa-arrow-circle-o-left"></i></a> Data Soal [{{ data_soal.0.kd_soal }}]</h1>
+                <div class="card text-white bg-primary mb-3" style="max-width: 30rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ data_soal.0.judul_soal }}</h5>
+                        <p class="card-text">{{ data_soal.0.kd_ampu.kd_mk.mata_kuliah }} | Semester {{ data_soal.0.kd_ampu.semester }} | Kelas {{ data_soal.0.kd_ampu.kd_kelas.kelas }}</p>
+                    </div>
+                    <!-- <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="la la-home font-20"></i></a>
                     </li>
                     <li class="breadcrumb-item">a</li>
                     </ol> -->
-            </div>
-            <div class="page-content fade-in-up">
-                <div class="ibox">
-                    <div class="ibox-head">
-                        <div class="ibox-title">Table</div>
-                        <button class="btn btn-rounded btn-success" data-toggle="modal" data-target="#tambah"><i
+                </div>
+                <div class="page-content fade-in-up">
+                    <div class="ibox">
+                        <div class="ibox-head">
+                            <div class="ibox-title">Table</div>
+                            <button class="btn btn-rounded btn-success" data-toggle="modal" data-target="#tambah"><i
                                 class="fa fa-plus-circle"></i>&nbsp; Tambah
                             Data</button>
-                    </div>
-                    <div class="ibox-body">
-                        <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Soal</th>
-                                    <th>Jawaban 1</th>
-                                    <th>Jawaban 2</th>
-                                    <th>Jawaban 3</th>
-                                    <th>Dibuat</th>
-                                    <!-- <th>Diperbaharui</th> -->
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Soal</th>
-                                    <th>Jawaban 1</th>
-                                    <th>Jawaban 2</th>
-                                    <th>Jawaban 3</th>
-                                    <th>Dibuat</th>
-                                    <!-- <th>Diperbaharui</th> -->
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                {% for detail in detail_soal %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ detail.soal }}</td>
-                                    <td>{{ detail.jawaban1 }}</td>
-                                    <td>{{ detail.jawaban2 }}</td>
-                                    <td>{{ detail.jawaban3 }}</td>
-                                    <td>{{ detail.created_at }}</td>
-                                    <!-- <td>{{ detail.updated_at }}</td> -->
-                                    <td>
-                                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#hapus" data-id="{{ detail.id }}">
+                        </div>
+                        <div class="ibox-body">
+                            <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Soal</th>
+                                        <!-- <th>Jawaban 1</th>
+                                        <th>Jawaban 2</th>
+                                        <th>Jawaban 3</th> -->
+                                        <th>Jawaban</th>
+                                        <th>Dibuat</th>
+                                        <!-- <th>Diperbaharui</th> -->
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Soal</th>
+                                        <!-- <th>Jawaban 1</th>
+                                        <th>Jawaban 2</th>
+                                        <th>Jawaban 3</th> -->
+                                        <th>Jawaban</th>
+                                        <th>Dibuat</th>
+                                        <!-- <th>Diperbaharui</th> -->
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for detail in detail_soal %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ detail.soal }}</td>
+                                        <!-- <td>{{ detail.jawaban1 }}</td>
+                                        <td>{{ detail.jawaban2 }}</td>
+                                        <td>{{ detail.jawaban3 }}</td> -->
+                                        <td>
+                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_jawaban" data-jawabanke="Jawaban 1" data-jawaban="{{detail.jawaban1}}">Jawaban 1</button>
+                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_jawaban" data-jawabanke="Jawaban 2" data-jawaban="{{detail.jawaban2}}">Jawaban 2</button>
+                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal_jawaban" data-jawabanke="Jawaban 3" data-jawaban="{{detail.jawaban3}}">Jawaban 3</button>
+                                        </td>
+                                        <td>{{ detail.created_at }}</td>
+                                        <!-- <td>{{ detail.updated_at }}</td> -->
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#hapus" data-id="{{ detail.id }}">
                                             <i class="fa fa-trash"></i> Hapus</button>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Modal Add -->
-                <div class="modal fade" id="tambah" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <i class="fa fa-plus-circle"></i>
-                                <h5 class="modal-title" style="font-weight: bold;">Tambah Data</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- Modal Add -->
+                    <div class="modal fade" id="tambah" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <i class="fa fa-plus-circle"></i>
+                                    <h5 class="modal-title" style="font-weight: bold;">Tambah Data</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="modal-form-add" action="{% url 'tambah-detailsoal-dosen' kd_soal %}" method="POST" role="form">
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                        <label for="soal" class="col-form-label">Soal :</label>
-                                        <textarea class="form-control" name="soal" required></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="jawaban1" class="col-form-label">Jawaban 1 :</label>
-                                        <textarea class="form-control" name="jawaban1" required></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="jawaban2" class="col-form-label">Jawaban 2 :</label>
-                                        <textarea class="form-control" name="jawaban2" required></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="jawaban3" class="col-form-label">Jawaban 3 :</label>
-                                        <textarea class="form-control" name="jawaban3" required></textarea>
-                                    </div>
-                                    <!-- <div class="form-group">
+                                </div>
+                                <div class="modal-body">
+                                    <form id="modal-form-add" action="{% url 'tambah-detailsoal-dosen' data_soal.0.kd_soal %}" method="POST" role="form">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="soal" class="col-form-label">Soal :</label>
+                                            <textarea class="form-control" name="soal" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="jawaban1" class="col-form-label">Jawaban 1 :</label>
+                                            <textarea class="form-control" name="jawaban1" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="jawaban2" class="col-form-label">Jawaban 2 :</label>
+                                            <textarea class="form-control" name="jawaban2" required></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="jawaban3" class="col-form-label">Jawaban 3 :</label>
+                                            <textarea class="form-control" name="jawaban3" required></textarea>
+                                        </div>
+                                        <!-- <div class="form-group">
                                         <label for="bobot" class="col-form-label">Bobot :</label>
                                         <input type="number" class="form-control" name="bobot" required>
                                     </div> -->
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-success">Tambah</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Delete -->
-                <div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <i class="fa fa-trash"></i>
-                                <h5 class="modal-title"><b>Hapus Data</b></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <form form id="modal-form-delete" action="{% url 'hapus-detailsoal-dosen' kd_soal %}" method="POST" role="form">
-                                {% csrf_token %}
-                                <div class="modal-body">
-                                    <p class="content" style="text-align: center;">...</p>
-                                    <input type="hidden" id="id" name="id" value="">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                    <button type="submit" class="btn btn-success">Tambah</button>
                                 </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Modal Setting -->
-                <div class="modal fade" id="pengaturan" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <i class="fa fa-cog"></i>
-                                <h5 class="modal-title" style="font-weight: bold;">Settings</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- Modal Delete -->
+                    <div class="modal fade" id="hapus" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <i class="fa fa-trash"></i>
+                                    <h5 class="modal-title"><b>Hapus Data</b></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="modal-form-pengaturan" action="{% url 'pengaturan-dosen' %}" method="POST" role="form">
+                                </div>
+                                <form form id="modal-form-delete" action="{% url 'hapus-detailsoal-dosen' data_soal.0.kd_soal %}" method="POST" role="form">
                                     {% csrf_token %}
-                                    <div class="form-group">
-                                        <label for="nip" class="col-form-label">NIP :</label>
-                                        <input type="text" class="form-control" id="nip" name="nip" readonly>
+                                    <div class="modal-body">
+                                        <p class="content" style="text-align: center;">...</p>
+                                        <input type="hidden" id="id" name="id" value="">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="nama" class="col-form-label">Nama :</label>
-                                        <input type="text" class="form-control" id="nama" name="nama" required>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="password" class="col-form-label">Password : *tidak
-                                            wajib</label>
-                                        <input type="password" class="form-control" name="password">
-                                    </div>
+                                </form>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-success">Ubah</button>
-                            </div>
-                            </form>
                         </div>
                     </div>
-                </div>
 
-                <style>
-                    .visitors-table tbody tr td:last-child {
-                        display: flex;
-                        align-items: center;
-                    }
-                    
-                    .visitors-table .progress {
-                        flex: 1;
-                    }
-                    
-                    .visitors-table .progress-parcent {
-                        text-align: right;
-                        margin-left: 10px;
-                    }
-                </style>
-                <!-- END PAGE CONTENT-->
-                <footer class="page-footer">
-                    <div class="font-13">
-                        2020 © <b>Sevranomatis v1.0</b> - All rights reserved.
+                    <!-- Modal Jawaban -->
+                    <div class="modal fade" id="modal_jawaban" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <i class="fa fa-question-circle"></i>
+                                    <h5 class="modal-title" id="jawabanke"><b>Jawaban 1</b></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="jawaban" style="text-align: center;">...</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="to-top"><i class="fa fa-angle-double-up"></i></div>
-                </footer>
+
+                    <!-- Modal Setting -->
+                    <div class="modal fade" id="pengaturan" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <i class="fa fa-cog"></i>
+                                    <h5 class="modal-title" style="font-weight: bold;">Settings</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="modal-form-pengaturan" action="{% url 'pengaturan-dosen' %}" method="POST" role="form">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="nip" class="col-form-label">NIP :</label>
+                                            <input type="text" class="form-control" id="nip" name="nip" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nama" class="col-form-label">Nama :</label>
+                                            <input type="text" class="form-control" id="nama" name="nama" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password" class="col-form-label">Password : *tidak
+                                            wajib</label>
+                                            <input type="password" class="form-control" name="password">
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-success">Ubah</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        .visitors-table tbody tr td:last-child {
+                            display: flex;
+                            align-items: center;
+                        }
+                        
+                        .visitors-table .progress {
+                            flex: 1;
+                        }
+                        
+                        .visitors-table .progress-parcent {
+                            text-align: right;
+                            margin-left: 10px;
+                        }
+                    </style>
+                    <!-- END PAGE CONTENT-->
+                    <footer class="page-footer">
+                        <div class="font-13">
+                            2020 © <b>Sevranomatis v1.0</b> - All rights reserved.
+                        </div>
+                        <div class="to-top"><i class="fa fa-angle-double-up"></i></div>
+                    </footer>
+                </div>
             </div>
-        </div>
-        <!-- BEGIN THEME CONFIG PANEL-->
-        <div class="theme-config">
-            <div class="theme-config-toggle">
-                <i class="fa fa-cog theme-config-show"></i><i class="ti-close theme-config-close"></i>
-            </div>
-            <div class="theme-config-box">
-                <div class="text-center font-18 m-b-20">SETTINGS</div>
-                <div class="font-strong">LAYOUT OPTIONS</div>
-                <div class="check-list m-b-20 m-t-10">
-                    <label class="ui-checkbox ui-checkbox-gray">
+            <!-- BEGIN THEME CONFIG PANEL-->
+            <div class="theme-config">
+                <div class="theme-config-toggle">
+                    <i class="fa fa-cog theme-config-show"></i><i class="ti-close theme-config-close"></i>
+                </div>
+                <div class="theme-config-box">
+                    <div class="text-center font-18 m-b-20">SETTINGS</div>
+                    <div class="font-strong">LAYOUT OPTIONS</div>
+                    <div class="check-list m-b-20 m-t-10">
+                        <label class="ui-checkbox ui-checkbox-gray">
                         <input id="_fixedNavbar" type="checkbox" checked />
                         <span class="input-span"></span>Fixed navbar</label>
-                    <label class="ui-checkbox ui-checkbox-gray">
+                        <label class="ui-checkbox ui-checkbox-gray">
                         <input id="_fixedlayout" type="checkbox" />
                         <span class="input-span"></span>Fixed layout</label>
-                    <label class="ui-checkbox ui-checkbox-gray">
+                        <label class="ui-checkbox ui-checkbox-gray">
                         <input class="js-sidebar-toggler" type="checkbox" />
                         <span class="input-span"></span>Collapse sidebar</label>
-                </div>
-                <div class="font-strong">LAYOUT STYLE</div>
-                <div class="m-t-10">
-                    <label class="ui-radio ui-radio-gray m-r-10">
+                    </div>
+                    <div class="font-strong">LAYOUT STYLE</div>
+                    <div class="m-t-10">
+                        <label class="ui-radio ui-radio-gray m-r-10">
                         <input type="radio" name="layout-style" value="" checked="" />
                         <span class="input-span"></span>Fluid</label>
-                    <label class="ui-radio ui-radio-gray">
+                        <label class="ui-radio ui-radio-gray">
                         <input type="radio" name="layout-style" value="1" />
                         <span class="input-span"></span>Boxed</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- END THEME CONFIG PANEL-->
-        <!-- BEGIN PAGA BACKDROPS-->
-        <div class="sidenav-backdrop backdrop"></div>
-        <div class="preloader-backdrop">
-            <div class="page-preloader">Loading</div>
-        </div>
-        <!-- END PAGA BACKDROPS-->
-        <!-- CORE PLUGINS-->
-        <script src="{% static 'assets/vendors/jquery/dist/jquery.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/vendors/popper.js/dist/umd/popper.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/vendors/bootstrap/dist/js/bootstrap.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/vendors/metisMenu/dist/metisMenu.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript">
-        </script>
-        <!-- PAGE LEVEL PLUGINS-->
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <!-- <script src="{% static 'assets/vendors/chart.js/dist/Chart.min.js' %}" type="text/javascript"></script>
+            <!-- END THEME CONFIG PANEL-->
+            <!-- BEGIN PAGA BACKDROPS-->
+            <div class="sidenav-backdrop backdrop"></div>
+            <div class="preloader-backdrop">
+                <div class="page-preloader">Loading</div>
+            </div>
+            <!-- END PAGA BACKDROPS-->
+            <!-- CORE PLUGINS-->
+            <script src="{% static 'assets/vendors/jquery/dist/jquery.min.js' %}" type="text/javascript"></script>
+            <script src="{% static 'assets/vendors/popper.js/dist/umd/popper.min.js' %}" type="text/javascript"></script>
+            <script src="{% static 'assets/vendors/bootstrap/dist/js/bootstrap.min.js' %}" type="text/javascript"></script>
+            <script src="{% static 'assets/vendors/metisMenu/dist/metisMenu.min.js' %}" type="text/javascript"></script>
+            <script src="{% static 'assets/vendors/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript">
+            </script>
+            <!-- PAGE LEVEL PLUGINS-->
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <!-- <script src="{% static 'assets/vendors/chart.js/dist/Chart.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-2.0.3.min.js' %}" type="text/javascript">
         </script>
         <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}" type="text/javascript"></script>
         <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-us-aea-en.js' %}" type="text/javascript">
         </script> -->
-        <script src="{% static 'assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
-        <!-- CORE SCRIPTS-->
-        <script src="{% static 'assets/js/app.min.js' %}" type="text/javascript"></script>
-        <!-- PAGE LEVEL SCRIPTS-->
-        <!-- <script src="{% static 'assets/js/scripts/dashboard_1_demo.js' %}" type="text/javascript"></script> -->
-        <script type="text/javascript">
-            $(function() {
-                $('#example-table').DataTable({
-                    pageLength: 10,
-                });
+            <script src="{% static 'assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+            <!-- CORE SCRIPTS-->
+            <script src="{% static 'assets/js/app.min.js' %}" type="text/javascript"></script>
+            <!-- PAGE LEVEL SCRIPTS-->
+            <!-- <script src="{% static 'assets/js/scripts/dashboard_1_demo.js' %}" type="text/javascript"></script> -->
+            <script type="text/javascript">
+                $(function() {
+                    $('#example-table').DataTable({
+                        pageLength: 10,
+                    });
 
-                $('#pengaturan').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal
-                    var nip = button.data('nip') // Extract info from data-* attributes
-                    var nama = button.data('nama')
-                        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                    var modal = $(this)
-                    modal.find('.modal-body #nip').val(nip)
-                    modal.find('.modal-body #nama').val(nama)
-                });
+                    $('#pengaturan').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget) // Button that triggered the modal
+                        var nip = button.data('nip') // Extract info from data-* attributes
+                        var nama = button.data('nama')
+                            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                        var modal = $(this)
+                        modal.find('.modal-body #nip').val(nip)
+                        modal.find('.modal-body #nama').val(nama)
+                    });
 
-                var formPengaturan = $('#modal-form-pengaturan')
-                formPengaturan.submit(function(e) {
-                    e.preventDefault()
+                    var formPengaturan = $('#modal-form-pengaturan')
+                    formPengaturan.submit(function(e) {
+                        e.preventDefault()
 
-                    $.ajax({
-                        url: formPengaturan.attr('action'),
-                        type: "POST",
-                        data: formPengaturan.serialize(),
-                        dataType: "JSON",
-                        success: function(res) {
-                            console.log(res)
-                            if (res.error == 0) {
-                                $('#pengaturan').modal('hide');
-                                swal(
-                                    'Berhasil',
-                                    res.message,
-                                    'success'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
-                                    }
-                                });
-                            } else {
-                                $('#pengaturan').modal('hide');
-                                swal(
-                                    'Gagal:(',
-                                    res.message,
-                                    'error'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
-                                    }
-                                });
+                        $.ajax({
+                            url: formPengaturan.attr('action'),
+                            type: "POST",
+                            data: formPengaturan.serialize(),
+                            dataType: "JSON",
+                            success: function(res) {
+                                console.log(res)
+                                if (res.error == 0) {
+                                    $('#pengaturan').modal('hide');
+                                    swal(
+                                        'Berhasil',
+                                        res.message,
+                                        'success'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                } else {
+                                    $('#pengaturan').modal('hide');
+                                    swal(
+                                        'Gagal:(',
+                                        res.message,
+                                        'error'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                }
                             }
-                        }
+                        })
                     })
-                })
 
-                $('#tambah').on('show.bs.modal', function(event) {
-                    //event.preventDefault();
-                });
+                    $('#tambah').on('show.bs.modal', function(event) {
+                        //event.preventDefault();
+                    });
 
-                var formTambah = $('#modal-form-add')
-                formTambah.submit(function(e) {
-                    e.preventDefault()
+                    var formTambah = $('#modal-form-add')
+                    formTambah.submit(function(e) {
+                        e.preventDefault()
 
-                    $.ajax({
-                        url: formTambah.attr('action'),
-                        type: "POST",
-                        data: formTambah.serialize(),
-                        dataType: "JSON",
-                        success: function(res) {
-                            console.log(res)
-                            if (res.error == 0) {
-                                $('#tambah').modal('hide');
-                                swal(
-                                    'Berhasil',
-                                    res.message,
-                                    'success'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'detail-soal-dosen' kd_soal %}";
-                                    }
-                                });
-                            } else {
-                                $('#tambah').modal('hide');
-                                swal(
-                                    'Gagal:(',
-                                    res.message,
-                                    'error'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'detail-soal-dosen' kd_soal %}";
-                                    }
-                                });
+                        $.ajax({
+                            url: formTambah.attr('action'),
+                            type: "POST",
+                            data: formTambah.serialize(),
+                            dataType: "JSON",
+                            success: function(res) {
+                                console.log(res)
+                                if (res.error == 0) {
+                                    $('#tambah').modal('hide');
+                                    swal(
+                                        'Berhasil',
+                                        res.message,
+                                        'success'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                } else {
+                                    $('#tambah').modal('hide');
+                                    swal(
+                                        'Gagal:(',
+                                        res.message,
+                                        'error'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                }
                             }
-                        }
+                        })
                     })
-                })
 
-                $('#hapus').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget)
-                    var id = button.data('id')
+                    $('#hapus').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget)
+                        var id = button.data('id')
 
-                    var modal = $(this)
-                    modal.find('.modal-body #id').val(id)
-                    modal.find('.modal-body .content').text('Anda yakin ingin menghapus data ini ?')
-                });
+                        var modal = $(this)
+                        modal.find('.modal-body #id').val(id)
+                        modal.find('.modal-body .content').text('Anda yakin ingin menghapus data ini ?')
+                    });
 
-                var formDelete = $('#modal-form-delete')
-                formDelete.submit(function(e) {
-                    e.preventDefault()
+                    $('#modal_jawaban').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget)
+                        var jawabanke = button.data('jawabanke')
+                        var jawaban = button.data('jawaban')
 
-                    $.ajax({
-                        url: formDelete.attr('action'),
-                        type: "POST",
-                        data: formDelete.serialize(),
-                        dataType: "JSON",
-                        success: function(res) {
-                            console.log(res)
-                            if (res.error == 0) {
-                                $('#hapus').modal('hide');
-                                swal(
-                                    'Berhasil',
-                                    res.message,
-                                    'success'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'detail-soal-dosen' kd_soal %}";
-                                    }
-                                });
-                            } else {
-                                $('#hapus').modal('hide');
-                                swal(
-                                    'Gagal:(',
-                                    res.message,
-                                    'error'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href =
-                                            "{% url 'detail-soal-dosen' kd_soal %}";
-                                    }
-                                });
+                        var modal = $(this)
+                        modal.find('.modal-header #jawabanke').text(jawabanke)
+                        modal.find('.modal-body #jawaban').text(jawaban)
+                    });
+
+                    var formDelete = $('#modal-form-delete')
+                    formDelete.submit(function(e) {
+                        e.preventDefault()
+
+                        $.ajax({
+                            url: formDelete.attr('action'),
+                            type: "POST",
+                            data: formDelete.serialize(),
+                            dataType: "JSON",
+                            success: function(res) {
+                                console.log(res)
+                                if (res.error == 0) {
+                                    $('#hapus').modal('hide');
+                                    swal(
+                                        'Berhasil',
+                                        res.message,
+                                        'success'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                } else {
+                                    $('#hapus').modal('hide');
+                                    swal(
+                                        'Gagal:(',
+                                        res.message,
+                                        'error'
+                                    ).then(OK => {
+                                        if (OK) {
+                                            window.location.href =
+                                                "{% url 'detail-soal-dosen' data_soal.0.kd_soal %}";
+                                        }
+                                    });
+                                }
                             }
-                        }
+                        })
                     })
+
+
                 })
-
-
-            })
-        </script>
+            </script>
 </body>
 
 </html>

@@ -85,7 +85,7 @@
                     </li>
                     <li>
                         <a href="{% url 'soal-dosen' %}"><i class="sidebar-item-icon fa fa-book"></i>
-                            <span class="nav-label">Soal-Soal</span>
+                            <span class="nav-label">Ujian</span>
                         </a>
                     </li>
                     <li>
@@ -309,7 +309,7 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
+                                            "{% url 'ampu-dosen' %}";
                                     }
                                 });
                             } else {
@@ -321,7 +321,7 @@
                                 ).then(OK => {
                                     if (OK) {
                                         window.location.href =
-                                            "{% url 'dashboard-dosen' %}";
+                                            "{% url 'ampu-dosen' %}";
                                     }
                                 });
                             }

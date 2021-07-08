@@ -77,5 +77,8 @@ def scoring(key, answer):
     #     nilai.append(z*100)
         #print(z*100)
 
+    print(s)
+    print(l)
+
     return s[1]*100
-    #print(l)
+    # print(l)

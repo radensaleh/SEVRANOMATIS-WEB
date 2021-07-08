@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +27,7 @@ SECRET_KEY = 'vung$ylcc3lngp#0toov+ocp%jayh(xcr&x5^plibx$rp(y7@2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '192.168.43.197', '127.0.0.1', '192.168.1.168']
+ALLOWED_HOSTS = ['localhost', '192.168.43.197', '127.0.0.1', '192.168.1.161', '192.168.0.38']
 
 
 # Application definition
@@ -79,10 +81,17 @@ WSGI_APPLICATION = 'SEVRANOMATIS.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'Sevranomatis',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'admin',
+    #     'HOST': 'localhost'
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Sevranomatis',
-        'USER': 'postgres',
+        'USER': 'root',
         'PASSWORD': 'admin',
         'HOST': 'localhost'
     }

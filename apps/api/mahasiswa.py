@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from apps.models import Mahasiswa, Kelas, AmpuMatkul, Soal, DetailSoal, Nilai
+from apps.models import Mahasiswa, Kelas, AmpuMatkul, Soal, DetailSoal, Nilai, LogNilai
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
@@ -14,6 +14,7 @@ from django.forms.models import model_to_dict
 from apps.api.essay_scoring import scoring
 import math
 from numpy import random
+
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -182,8 +183,9 @@ def detail_soal(request):
         if(len(data) == 0):
             soal_dict = {}
 
-            data = Soal.objects.filter(kd_soal=request.POST['kd_soal']).order_by('-created_at')
-            
+            data = Soal.objects.filter(
+                kd_soal=request.POST['kd_soal']).order_by('-created_at')
+
             data_dict = {
                 'kd_soal': data[0].kd_soal,
                 'judul_soal': data[0].judul_soal,
@@ -233,8 +235,247 @@ def detail_soal(request):
             soal_dict['data_soal'] = soal_record
 
             return JsonResponse(soal_dict)
-        
 
+
+# custom soal proccess log
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def log_nilai(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'statusCode': 1,
+            'message': 'Method Not Allowed!',
+        })
+    else:
+        kd_soal = request.POST['kd_soal']
+        nim = request.POST['nim']
+
+        cekIfExist = Nilai.objects.filter(
+            nim=nim).filter(kd_soal=kd_soal).count()
+
+        data_dict = {}
+
+        if cekIfExist == 0:
+            date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            ran = random.randint(999999)
+            twoDigits = nim[5:]
+            kd_nilai = 'N' + str(ran) + '-' + twoDigits
+
+            # SAVE NILAI
+            Nilai.objects.create(kd_nilai=kd_nilai, kd_soal_id=kd_soal, nim_id=nim,
+                                 nilai=0, index='E', created_at=date, updated_at=date, skor=0)
+
+            nomer = request.POST.getlist('nomer[]')
+            jawaban = request.POST.getlist('jawaban[]')
+            kd_soal = request.POST['kd_soal']
+            nim = request.POST['nim']
+
+            j = 0
+            nilai = 0
+
+            data_record = []
+            data_score = []
+
+            for i in nomer:
+                getKey = DetailSoal.objects.filter(id=int(i))
+                question = getKey[0].soal
+                key1 = getKey[0].jawaban1
+                key2 = getKey[0].jawaban2
+                key3 = getKey[0].jawaban3
+
+                result1 = scoring([key1], [jawaban[j]])
+                result2 = scoring([key2], [jawaban[j]])
+                result3 = scoring([key3], [jawaban[j]])
+
+                #skor tertinggi
+                allResult = [result1, result2, result3]
+                maxResult = max(allResult)
+
+                #skor rata-rata
+                ratarata = ( result1 + result2 + result3 ) / 3
+
+                keys = {
+                    'no': int(i),
+                    'question': question,
+                    # 'key1': getKey[0].jawaban1,
+                    # 'key2': getKey[0].jawaban2,
+                    # 'key3': getKey[0].jawaban3,
+                    'answer': jawaban[j],
+                    'result1': math.ceil(result1),
+                    'result2': math.ceil(result2),
+                    'result3': math.ceil(result3),
+                    'score_final': math.ceil(maxResult)
+                }
+
+                # LOG
+                date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+                ran = random.randint(9999)
+                twoDigits = nim[5:]
+                kd_log = 'LOG' + str(ran) + '-' + twoDigits
+
+                LogNilai.objects.create(kd_log=kd_log, no=int(i), pertanyaan=question, jawaban=jawaban[j], skor1=math.ceil(result1), skor2=math.ceil(result2),
+                                        skor3=math.ceil(result3), status=0, created_at=date, updated_at=date, kd_nilai_id=kd_nilai, skor_ratarata=math.ceil(ratarata), skor_tertinggi=math.ceil(maxResult), skor_akhir=0)
+                # END LOG
+
+                j += 1
+                data_record.append(keys)
+                data_score.append(math.ceil(maxResult))
+
+            data_dict['statusCode'] = 0
+            data_dict['message'] = 'Success!'
+            data_dict['data'] = []
+            #data_dict['data'] = data_record
+            # data_dict['data'] = [
+            #     {'data_record': data_record, 'data_score': data_score}]
+
+            return JsonResponse(data_dict)
+
+        else:
+            data_dict['statusCode'] = 1
+            data_dict['message'] = 'Anda sudah mengerjakan soal ini!'
+            #data_dict['data'] = data_record
+            data_dict['data'] = []
+
+            return JsonResponse(data_dict)
+
+
+# custom soal proccess log persoal
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def log_nilai_persoal(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'statusCode': 1,
+            'message': 'Method Not Allowed!',
+        })
+    else:
+        kd_soal = request.POST['kd_soal']
+        nim = request.POST['nim']
+
+        cekIfExist = Nilai.objects.filter(
+            nim=nim).filter(kd_soal=kd_soal).count()
+
+        data_dict = {}
+
+        if cekIfExist == 0:
+            date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            ran = random.randint(999999)
+            twoDigits = nim[5:]
+            kd_nilai = 'N' + str(ran) + '-' + twoDigits
+
+            # SAVE NILAI
+            Nilai.objects.create(kd_nilai=kd_nilai, kd_soal_id=kd_soal, nim_id=nim,
+                                 nilai=0, index='E', created_at=date, updated_at=date, skor=0)
+
+            nomer = request.POST['nomer']
+            jawaban = request.POST['jawaban']
+            kd_soal = request.POST['kd_soal']
+            nim = request.POST['nim']
+
+            getKey = DetailSoal.objects.filter(id=int(nomer))
+            question = getKey[0].soal
+            key1 = getKey[0].jawaban1
+            key2 = getKey[0].jawaban2
+            key3 = getKey[0].jawaban3
+
+            result1 = scoring([key1], [jawaban])
+            result2 = scoring([key2], [jawaban])
+            result3 = scoring([key3], [jawaban])
+
+            #skor tertinggi
+            allResult = [result1, result2, result3]
+            maxResult = max(allResult)
+
+            #skor rata-rata
+            ratarata = (result1 + result2 + result3) / 3
+
+            keys = {
+                'no': int(nomer),
+                'question': question,
+                # 'key1': getKey[0].jawaban1,
+                # 'key2': getKey[0].jawaban2,
+                # 'key3': getKey[0].jawaban3,
+                'answer': jawaban,
+                'result1': math.ceil(result1),
+                'result2': math.ceil(result2),
+                'result3': math.ceil(result3),
+                'score_final': math.ceil(maxResult)
+            }
+
+
+            # LOG
+            date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            ran = random.randint(9999)
+            twoDigits = nim[5:]
+            kd_log = 'LOG' + str(ran) + '-' + twoDigits
+
+            LogNilai.objects.create(kd_log=kd_log, no=int(nomer), pertanyaan=question, jawaban=jawaban, skor1=math.ceil(result1), skor2=math.ceil(result2),
+                                    skor3=math.ceil(result3), status=0, created_at=date, updated_at=date, kd_nilai_id=kd_nilai, skor_ratarata=math.ceil(ratarata), skor_tertinggi=math.ceil(maxResult), skor_akhir=0)
+            # END LOG
+
+
+            data_dict['statusCode'] = 0
+            data_dict['message'] = 'Success!'
+            #data_dict['data'] = data_record
+            data_dict['data'] = []
+
+            return JsonResponse(data_dict)
+
+        else:
+            nomer = request.POST['nomer']
+            jawaban = request.POST['jawaban']
+            kd_soal = request.POST['kd_soal']
+            nim = request.POST['nim']
+
+            kd_nilai = Nilai.objects.filter(kd_soal_id=kd_soal).filter(nim_id=nim).values('kd_nilai')
+
+            getKey = DetailSoal.objects.filter(id=int(nomer))
+            question = getKey[0].soal
+            key1 = getKey[0].jawaban1
+            key2 = getKey[0].jawaban2
+            key3 = getKey[0].jawaban3
+
+            result1 = scoring([key1], [jawaban])
+            result2 = scoring([key2], [jawaban])
+            result3 = scoring([key3], [jawaban])
+
+            #skor tertinggi
+            allResult = [result1, result2, result3]
+            maxResult = max(allResult)
+
+            #skor rata-rata
+            ratarata = (result1 + result2 + result3) / 3
+
+            keys = {
+                'no': int(nomer),
+                'question': question,
+                # 'key1': getKey[0].jawaban1,
+                # 'key2': getKey[0].jawaban2,
+                # 'key3': getKey[0].jawaban3,
+                'answer': jawaban,
+                'result1': math.ceil(result1),
+                'result2': math.ceil(result2),
+                'result3': math.ceil(result3),
+                'score_final': math.ceil(maxResult)
+            }
+
+
+            # LOG
+            date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            ran = random.randint(9999)
+            twoDigits = nim[5:]
+            kd_log = 'LOG' + str(ran) + '-' + twoDigits
+
+            LogNilai.objects.create(kd_log=kd_log, no=int(nomer), pertanyaan=question, jawaban=jawaban, skor1=math.ceil(result1), skor2=math.ceil(result2),
+                                    skor3=math.ceil(result3), status=0, created_at=date, updated_at=date, kd_nilai_id=kd_nilai, skor_ratarata=math.ceil(ratarata), skor_tertinggi=math.ceil(maxResult), skor_akhir=0)
+            # END LOG
+
+            data_dict['statusCode'] = 0
+            data_dict['message'] = 'Success!'
+            #data_dict['data'] = data_record
+            data_dict['data'] = []
+
+            return JsonResponse(data_dict)
 
 
 @csrf_exempt
@@ -298,7 +539,7 @@ def soal_proccess(request):
             return JsonResponse(data_dict)
         else:
             data_dict['statusCode'] = 1
-            data_dict['message'] = 'Anda Sudah Mengerjakan soal ini!'
+            data_dict['message'] = 'Anda sudah mengerjakan soal ini!'
             #data_dict['data'] = data_record
             data_dict['data'] = []
 
@@ -414,3 +655,51 @@ def nilai(request):
         nilai_dict['data'] = nilai_record
 
         return JsonResponse(nilai_dict)
+
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def skor_akhir(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'error': 1,
+            'message': 'Method Not Allowed!',
+        })
+    else:
+        skor_tertinggi = request.POST['skor_tertinggi']
+        skor_ratarata = request.POST['skor_ratarata']
+        select = request.POST['skor_akhir']
+        kd_log = request.POST['kd_log']
+
+        date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        logNilai = LogNilai.objects.get(pk=kd_log)
+
+        if select == '1':
+            logNilai.skor_akhir = skor_tertinggi
+        else:
+            logNilai.skor_akhir = skor_ratarata
+
+        logNilai.status = 1
+        logNilai.updated_at = date
+        logNilai.save()
+
+        return JsonResponse({'error': 0, 'message': 'Berhasil, Nilai sudah diupdate!'})
+
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def konfirm_nilai(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'error': 1,
+            'message': 'Method Not Allowed!',
+        })
+    else:
+        date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        getNilai = Nilai.objects.get(pk=request.POST['kd_nilai'])
+        getNilai.nilai = request.POST['nilai']
+        getNilai.index = request.POST['index']
+        getNilai.updated_at = date
+        getNilai.save()
+
+        return JsonResponse({'error': 0, 'message': 'Nilai Telah Terkonfirmasi'})

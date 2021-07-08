@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from datetime import datetime
 from django.urls import reverse
-from apps.models import Dosen, Admin, AmpuMatkul, MataKuliah, Kelas, Soal, DetailSoal, Nilai
+from apps.models import Dosen, Admin, AmpuMatkul, MataKuliah, Kelas, Soal, DetailSoal, Nilai, LogNilai
 from apps.authentication import DosenBackend
 from numpy import random
+import math
+from django.db.models import Sum
 
 
 def data_dosen(request):
@@ -210,7 +212,7 @@ def detail_soal_dosen(request, kd_soal):
 
         data = {
             'dosen': Dosen.objects.get(pk=nip),
-            'kd_soal': kd_soal,
+            'data_soal': Soal.objects.filter(kd_soal=kd_soal).order_by('-created_at'),
             'detail_soal': DetailSoal.objects.filter(kd_soal=kd_soal).all()
         }
         return render(request, 'dosen/detail_soal.html', data)
@@ -264,6 +266,57 @@ def nilai_mahasiswa(request):
 
         data = {
             'dosen': Dosen.objects.get(pk=nip),
-            'data_nilai': Nilai.objects.all().order_by('-created_at')
+            # 'data_nilai': Nilai.objects.all().order_by('-created_at')
+            'data_soal': Soal.objects.filter(kd_ampu__nip=nip).all().order_by('-created_at'),
         }
         return render(request, 'dosen/nilai_mahasiswa.html', data)
+
+def detail_nilai_mahasiswa(request, kd_soal):
+    if 'nip' not in request.session:
+            return HttpResponseRedirect(reverse('login-dosen'))
+    else:
+        nip = request.session.get('nip')
+
+        data = {
+            'dosen': Dosen.objects.get(pk=nip),
+            'data_ujian' : Soal.objects.filter(kd_soal=kd_soal).order_by('-created_at'),
+            'data_nilai': Nilai.objects.filter(kd_soal_id=kd_soal).order_by('-created_at')
+        }
+        return render(request, 'dosen/detail_nilai_mahasiswa.html', data)
+
+def log_mahasiswa(request, kd_soal, kd_nilai):
+    if 'nip' not in request.session:
+        return HttpResponseRedirect(reverse('login-dosen'))
+    else:
+        nip = request.session.get('nip')
+        total_skor = LogNilai.objects.filter(kd_nilai_id=kd_nilai).aggregate(Sum('skor_akhir'))
+        jumlah_soal = DetailSoal.objects.filter(kd_soal_id=kd_soal).count()
+        nilai = math.ceil(total_skor['skor_akhir__sum']/jumlah_soal)
+
+        index = ''
+        if nilai >= 50 and nilai < 60:
+            index = 'C'
+        elif nilai >= 60 and nilai < 70:
+            index = 'BC'
+        elif nilai >= 70 and nilai < 80:
+            index = 'B'
+        elif nilai >= 80 and nilai < 90:
+            index = 'AB'
+        elif nilai >= 90 and nilai <= 100:
+            index = 'A'
+        elif nilai > 100:
+            index = 'A'
+        else:
+            index = 'E'
+
+        data = {
+            'total_skor': total_skor['skor_akhir__sum'],
+            'jumlah_soal' : jumlah_soal,
+            'nilai' : nilai,
+            'index' : index,
+            'kd_nilai' : kd_nilai,
+            'dosen': Dosen.objects.get(pk=nip),
+            'data_nilai': Nilai.objects.filter(kd_nilai=kd_nilai).order_by('-created_at'),
+            'data_log': LogNilai.objects.filter(kd_nilai_id=kd_nilai).order_by('-created_at')
+        }
+        return render(request, 'dosen/log_nilai_mahasiswa.html', data)

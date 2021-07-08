@@ -567,7 +567,7 @@
                                     'success'
                                 ).then(OK => {
                                     if (OK) {
-                                        window.location.href = "{% url 'data-mahasiswa' %}";
+                                        window.location.href = "{% url 'data-kelas' %}";
                                     }
                                 });
                             } else {
@@ -578,56 +578,7 @@
                                     'error'
                                 ).then(OK => {
                                     if (OK) {
-                                        window.location.href = "{% url 'data-mahasiswa' %}";
-                                    }
-                                });
-                            }
-                        }
-                    })
-                })
-
-                $('#pengaturan').on('show.bs.modal', function(event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal
-                    var username = button.data('username') // Extract info from data-* attributes
-                    var nama = button.data('nama')
-                        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                    var modal = $(this)
-                    modal.find('.modal-body #username').val(username)
-                    modal.find('.modal-body #nama').val(nama)
-                });
-
-                var formPengaturan = $('#modal-form-pengaturan')
-                formPengaturan.submit(function(e) {
-                    e.preventDefault()
-
-                    $.ajax({
-                        url: formPengaturan.attr('action'),
-                        type: "POST",
-                        data: formPengaturan.serialize(),
-                        dataType: "JSON",
-                        success: function(res) {
-                            console.log(res)
-                            if (res.error == 0) {
-                                $('#pengaturan').modal('hide');
-                                swal(
-                                    'Berhasil',
-                                    res.message,
-                                    'success'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href = "{% url 'data-mahasiswa' %}";
-                                    }
-                                });
-                            } else {
-                                $('#pengaturan').modal('hide');
-                                swal(
-                                    'Gagal:(',
-                                    res.message,
-                                    'error'
-                                ).then(OK => {
-                                    if (OK) {
-                                        window.location.href = "{% url 'data-mahasiswa' %}";
+                                        window.location.href = "{% url 'data-kelas' %}";
                                     }
                                 });
                             }
