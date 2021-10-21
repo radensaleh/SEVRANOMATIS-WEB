@@ -7,7 +7,7 @@ asgiref==3.2.3
 asn1crypto==0.24.0
 astunparse==1.6.3
 autopep8==1.5
-Babel==2.4.0
+Babel==2.9.1
 blinker==1.4
 Brlapi==0.6.6
 cachetools==4.1.0
